@@ -86,3 +86,20 @@
     text-align: center;
   }
   
+ /* Existing styles above remain unchanged */
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  
+  .logo {
+    width: 100px; /* Updated to a larger size */
+    height: 100px;
+    object-fit: contain;
+  }
+  
+  /* Rest of the CSS remains unchanged */
+  
+  
