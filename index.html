@@ -1,42 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Currency Exchange</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="exchange-container">
-    <div class="logo-container">
-      <img src="images/logo.png" alt="Logo" class="logo">
+  <div class="container">
+    <!-- Main Content for Currency Converter -->
+    <div class="main-content">
+      <!-- Currency Converter Form -->
+      <div class="exchange-container">
+        <form class="exchange-form" onsubmit="convertCurrency(event)">
+          <!-- Exchange Rate Input -->
+          <div class="input-group">
+            <label for="exchangeRate">Exchange Rate (USD to Riel):</label>
+            <input type="number" id="exchangeRate" value="4000" placeholder="4000 Riel" />
+          </div>
+
+          <!-- Amount Input with Default Value of $1 -->
+          <div class="input-group">
+            <label for="amount">Amount (USD):</label>
+            <input type="number" id="amount" value="1" placeholder="Enter amount in USD" />
+          </div>
+
+          <!-- From and To Currency Dropdowns -->
+          <div class="input-group">
+            <label for="fromCurrency">From:</label>
+            <select id="fromCurrency">
+              <option value="USD">USD - US Dollar</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label for="toCurrency">To:</label>
+            <select id="toCurrency">
+              <option value="KHR">KHR - Cambodian Riel</option>
+            </select>
+          </div>
+
+          <!-- Swap Button -->
+          <div class="swap-button" onclick="swapCurrencies()">⇄</div>
+
+          <!-- Convert Button -->
+          <button type="submit" class="convert-button">Convert</button>
+
+          <!-- Result Label and Result Display -->
+          <div class="result-label">Converted Amount:</div>
+          <div class="result-box">
+            <div class="result" id="result">-</div>
+          </div>
+        </form>
+      </div>
     </div>
-    <div class="exchange-form">
-      <div class="input-group">
-        <label for="exchange-rate">Exchange Rate (1 USD to KHR)</label>
-        <input type="number" id="exchange-rate" placeholder="4000 KHR" value="4000">
+
+    <!-- Sidebar for Wing Exchange Rates (on the right) -->
+    <div class="sidebar">
+      <h2>Wing Exchange Rates</h2>
+      <div class="rate-header">
+        <span>Currency Pair</span>
+        <span>Bank Buy</span>
+        <span>Bank Sell</span>
       </div>
-      <div class="input-group">
-        <label for="amount">Amount</label>
-        <input type="number" id="amount" placeholder="$1.00">
+      <div class="rate-item">
+        <span>USD/KHR</span>
+        <span>4100</span>
+        <span>4125</span>
       </div>
-      <div class="input-group">
-        <label for="from-currency">From</label>
-        <select id="from-currency">
-          <option value="USD">USD - US Dollar</option>
-          <option value="KHR">KHR - Cambodian Riel</option>
-        </select>
-      </div>
-      <div class="swap-button">&#8646;</div>
-      <div class="input-group">
-        <label for="to-currency">To</label>
-        <select id="to-currency">
-          <option value="KHR">KHR - Cambodian Riel</option>
-          <option value="USD">USD - US Dollar</option>
-        </select>
-      </div>
-      <button class="convert-button">Convert</button>
-      <div id="result" class="result"></div>
+      <!-- Add more rate items as needed -->
     </div>
   </div>
 

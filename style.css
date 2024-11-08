@@ -1,105 +1,183 @@
+/* General Styles */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  body {
-    display: flex;
-    justify-content: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Container setup */
+.container {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 250px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-left: 1px solid #ddd;
+}
+
+.sidebar h2 {
+  color: #78be20;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+}
+
+.rate-header, .rate-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rate-header {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Main content styling */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Exchange Form Styling */
+.exchange-container {
+  width: 100%;
+  max-width: 400px;
+}
+
+.exchange-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #007bff;
+}
+
+.input-group input::placeholder {
+  color: #bbb;
+}
+
+/* Swap Button */
+.swap-button {
+  font-size: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  color: #007bff;
+  transition: color 0.2s ease-in-out;
+}
+
+.swap-button:hover {
+  color: #0056b3;
+}
+
+/* Convert Button */
+.convert-button {
+  padding: 12px;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.convert-button:hover {
+  background-color: #0056b3;
+}
+
+/* Result Label Styling */
+.result-label {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #777;
+  text-align: center;
+}
+
+/* Result Display Box with Border */
+.result-box {
+  margin-top: 10px;
+  padding: 15px;
+  border: 2px solid #007bff;
+  border-radius: 5px;
+  background-color: #f1faff;
+  text-align: center;
+}
+
+.result {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
     align-items: center;
-    height: 100vh;
-    background-color: #f5f7fa;
   }
-  
-  .exchange-container {
-    width: 400px;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
+
+  .sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #ddd;
   }
-  
-  .nav {
-    display: flex;
-    background-color: #1c2340;
-  }
-  
-  .nav-button {
-    flex: 1;
-    padding: 10px;
-    color: #ffffff;
-    background: #2e3957;
-    border: none;
-    cursor: pointer;
-    text-align: center;
-  }
-  
-  .exchange-form {
+
+  .main-content {
+    width: 100%;
     padding: 20px;
   }
-  
-  .input-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
-  }
-  
-  input, select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-  
-  .swap-button {
-    text-align: center;
-    font-size: 20px;
-    cursor: pointer;
-    padding: 10px 0;
-    color: #1c2340;
-  }
-  
-  .convert-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .result {
-    margin-top: 15px;
-    font-size: 18px;
-    color: #007bff;
-    font-weight: bold;
-    text-align: center;
-  }
-  
- /* Existing styles above remain unchanged */
 
-.logo-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 15px;
+  .exchange-container {
+    max-width: 100%;
   }
-  
-  .logo {
-    width: 100px; /* Updated to a larger size */
-    height: 100px;
-    object-fit: contain;
-  }
-  
-  /* Rest of the CSS remains unchanged */
-  
-  
+}
