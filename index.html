@@ -44,7 +44,7 @@
           <div class="swap-button" onclick="swapCurrencies()">⇄</div>
 
           <!-- Convert Button -->
-          <button type="submit" class="convert-button">Convert</button>
+          <button type="button" class="convert-button" onclick="convertCurrency(event)">Convert</button>
 
           <!-- Result Label and Result Display -->
           <div class="result-label">Converted Amount:</div>
@@ -68,7 +68,17 @@
         <span>4100</span>
         <span>4125</span>
       </div>
-      <!-- Add more rate items as needed -->
+      <h2>ABA Exchange Rates</h2>
+      <div class="rate-header">
+        <span>Currency Pair</span>
+        <span>Bank Buy</span>
+        <span>Bank Sell</span>
+      </div>
+      <div class="rate-item">
+        <span>USD/KHR</span>
+        <span>4100</span>
+        <span>4125</span>
+      </div>
     </div>
   </div>
 
