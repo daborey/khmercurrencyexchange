@@ -15,8 +15,8 @@
         <form class="exchange-form" onsubmit="convertCurrency(event)">
           <!-- Exchange Rate Input -->
           <div class="input-group">
-            <label for="exchangeRate">Exchange Rate (USD to Riel):</label>
-            <input type="number" id="exchangeRate" value="4000" placeholder="4000 Riel" />
+            <label for="exchangeRate">Exchange Rate (USD to KHR):</label>
+            <input type="number" id="exchangeRate" value="4000" placeholder="Enter exchange rate" />
           </div>
 
           <!-- Amount Input with Default Value of $1 -->
@@ -55,9 +55,10 @@
       </div>
     </div>
 
-    <!-- Sidebar for Wing Exchange Rates (on the right) -->
+    <!-- Sidebar for Bank Exchange Rates and Update Data Form -->
     <div class="sidebar">
       <h2>Wing Exchange Rates</h2>
+      <p>Updated as of: 12 Nov 2024</p>
       <div class="rate-header">
         <span>Currency Pair</span>
         <span>Bank Buy</span>
@@ -65,10 +66,12 @@
       </div>
       <div class="rate-item">
         <span>USD/KHR</span>
-        <span>4100</span>
-        <span>4125</span>
+        <span id="wingBuy">4100</span>
+        <span id="wingSell">4125</span>
       </div>
+      
       <h2>ABA Exchange Rates</h2>
+      <p>Updated as of: 12 Nov 2024</p>
       <div class="rate-header">
         <span>Currency Pair</span>
         <span>Bank Buy</span>
@@ -76,9 +79,31 @@
       </div>
       <div class="rate-item">
         <span>USD/KHR</span>
-        <span>4100</span>
-        <span>4125</span>
+        <span id="abaBuy">4050.00</span>
+        <span id="abaSell">4070.00</span>
       </div>
+
+      <!-- Update Currency Data Section -->
+      <h2>Update Currency Data</h2>
+      <form onsubmit="updateCurrencyData(event)">
+        <div class="input-group">
+          <label for="wingBuyUpdate">Wing Buy Rate (USD/KHR):</label>
+          <input type="number" id="wingBuyUpdate" placeholder="Enter new Wing buy rate" />
+        </div>
+        <div class="input-group">
+          <label for="wingSellUpdate">Wing Sell Rate (USD/KHR):</label>
+          <input type="number" id="wingSellUpdate" placeholder="Enter new Wing sell rate" />
+        </div>
+        <div class="input-group">
+          <label for="abaBuyUpdate">ABA Buy Rate (USD/KHR):</label>
+          <input type="number" id="abaBuyUpdate" placeholder="Enter new ABA buy rate" />
+        </div>
+        <div class="input-group">
+          <label for="abaSellUpdate">ABA Sell Rate (USD/KHR):</label>
+          <input type="number" id="abaSellUpdate" placeholder="Enter new ABA sell rate" />
+        </div>
+        <button type="submit" class="update-button">Update Rates</button>
+      </form>
     </div>
   </div>
 
