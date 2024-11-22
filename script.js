@@ -1,73 +1,61 @@
 const apiURL = 'https://data.mef.gov.kh/api/v1/realtime-api/exchange-rate?currency_id=';
 
-document.addEventListener('DOMContentLoaded', function() {
-  const convertFromSelect = document.getElementById('convert-from');
-  const convertToSelect = document.getElementById('convert-to');
-  const convertAmountInput = document.getElementById('convert-amount');
-  const convertedAmount = document.getElementById('converted-amount');
+document.addEventListener('DOMContentLoaded', () => {
+  const bankSelect = document.getElementById('select-bank');
+  const fromCurrencySelect = document.getElementById('from-currency');
+  const toCurrencySelect = document.getElementById('to-currency');
+  const amountInput = document.getElementById('amount');
+  const convertButton = document.getElementById('convert-button');
+  const rateDisplay = document.getElementById('rate');
+  const amountResultDisplay = document.getElementById('amount-result');
 
-  // Update exchange rates and currencies
-  function updateRates() {
-    const currency = convertFromSelect.value;
-    
-    fetchExchangeRate('acleda', currency);
-    fetchExchangeRate('aba', currency);
-    fetchExchangeRate('wing', currency);
-  }
+  let currentRate = null;
 
-  // Fetch exchange rate for a selected bank and currency pair
-  function fetchExchangeRate(bank, currency) {
-    fetch(`${apiURL}${currency}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.data) {
-          const bidRate = data.data.data.bid;
-          const askRate = data.data.data.ask;
+  // Fetch exchange rate when dropdowns are changed
+  async function fetchExchangeRate() {
+    const fromCurrency = fromCurrencySelect.value;
+    const toCurrency = toCurrencySelect.value;
 
-          // Update the rates in the table for buy/sell (bid/ask)
-          document.getElementById(`${bank}-buy`).textContent = bidRate;
-          document.getElementById(`${bank}-sell`).textContent = askRate;
-        } else {
-          document.getElementById(`${bank}-buy`).textContent = 'No data';
-          document.getElementById(`${bank}-sell`).textContent = 'No data';
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching exchange rate:', err);
-        document.getElementById(`${bank}-buy`).textContent = 'Error';
-        document.getElementById(`${bank}-sell`).textContent = 'Error';
-      });
-  }
-
-  // Update rates when the currency selection changes
-  convertFromSelect.addEventListener('change', updateRates);
-  convertToSelect.addEventListener('change', updateRates);
-
-  // Currency conversion logic
-  convertAmountInput.addEventListener('input', function() {
-    const amount = parseFloat(convertAmountInput.value);
-    const fromCurrency = convertFromSelect.value;
-    const toCurrency = convertToSelect.value;
-
-    if (!amount) {
-      convertedAmount.textContent = '';
+    if (fromCurrency === toCurrency) {
+      currentRate = 1;
+      rateDisplay.textContent = "1 (Same Currency)";
       return;
     }
 
-    fetch(`${apiURL}${fromCurrency}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.data) {
-          const askRate = data.data.data.ask;  // Using the ask rate for conversion
-          const convertedAmountValue = (amount * askRate).toFixed(2);
-          convertedAmount.textContent = `Converted amount: ${convertedAmountValue} ${toCurrency}`;
-        }
-      })
-      .catch(err => {
-        console.error('Error during conversion:', err);
-      });
-  });
+    try {
+      const response = await fetch(`${apiURL}${fromCurrency}`);
+      const data = await response.json();
 
-  // Initialize the exchange rates on page load
-  updateRates();
-});
+      if (data && data.data) {
+        const bidRate = data.data.data.bid;
+        const askRate = data.data.data.ask;
+
+        // Display the correct rate based on bank (use ask rate for simplicity)
+        currentRate = askRate;
+        rateDisplay.textContent = `${bidRate} - ${askRate}`;
+      } else {
+        throw new Error('No rate data available');
+      }
+    } catch (error) {
+      console.error('Error fetching exchange rate:', error);
+      rateDisplay.textContent = 'Error fetching rate';
+      currentRate = null;
+    }
+  }
+
+  // Convert currency
+  function convertCurrency() {
+    const amount = parseFloat(amountInput.value);
+
+    if (isNaN(amount) || !currentRate) {
+      amountResultDisplay.textContent = '--';
+      alert('Please enter a valid amount and ensure rates are loaded.');
+      return;
+    }
+
+    const convertedAmount = (amount * currentRate).toFixed(2);
+    amountResultDisplay.textContent = `${convertedAmount} ${toCurrencySelect.value}`;
+  }
+
+  // Event listeners
+  fromCur

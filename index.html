@@ -3,67 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Currency Converter</title>
+  <title>Bank Currency Converter</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Currency Exchange Rates</h1>
+    <h1>Bank Currency Converter</h1>
     
-    <!-- Currency Conversion Form -->
+    <!-- Conversion Section -->
     <div class="converter">
-      <label for="convert-from">Convert from:</label>
-      <select id="convert-from">
+      <label for="select-bank">Select Bank:</label>
+      <select id="select-bank">
+        <option value="acleda">Acleda</option>
+        <option value="aba">ABA</option>
+        <option value="wing">Wing</option>
+      </select>
+
+      <label for="from-currency">From Currency:</label>
+      <select id="from-currency">
         <option value="USD">USD</option>
         <option value="KHR">KHR</option>
         <option value="CNY">CNY</option>
         <option value="EUR">EUR</option>
         <option value="KRW">KRW</option>
       </select>
-      
-      <label for="convert-to">Convert to:</label>
-      <select id="convert-to">
+
+      <label for="to-currency">To Currency:</label>
+      <select id="to-currency">
         <option value="USD">USD</option>
         <option value="KHR">KHR</option>
         <option value="CNY">CNY</option>
         <option value="EUR">EUR</option>
         <option value="KRW">KRW</option>
       </select>
-      
-      <label for="convert-amount">Amount:</label>
-      <input type="number" id="convert-amount" placeholder="Enter amount">
+
+      <label for="amount">Amount:</label>
+      <input type="number" id="amount" placeholder="Enter amount" />
       
       <button id="convert-button">Convert</button>
-      <p id="converted-amount"></p>
     </div>
-    
-    <!-- Banks Exchange Rates Table -->
-    <table class="bank-rates">
-      <thead>
-        <tr>
-          <th>Bank</th>
-          <th>Buy (Bid)</th>
-          <th>Sell (Ask)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Acleda</td>
-          <td id="acleda-buy">Loading...</td>
-          <td id="acleda-sell">Loading...</td>
-        </tr>
-        <tr>
-          <td>ABA</td>
-          <td id="aba-buy">Loading...</td>
-          <td id="aba-sell">Loading...</td>
-        </tr>
-        <tr>
-          <td>Wing</td>
-          <td id="wing-buy">Loading...</td>
-          <td id="wing-sell">Loading...</td>
-        </tr>
-      </tbody>
-    </table>
+
+    <!-- Display Section -->
+    <div id="conversion-result">
+      <p id="exchange-rate">Exchange Rate: <span id="rate">--</span></p>
+      <p id="converted-amount">Converted Amount: <span id="amount-result">--</span></p>
+    </div>
   </div>
 
   <script src="script.js"></script>
