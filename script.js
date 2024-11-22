@@ -1,68 +1,45 @@
-const apiURL = 'https://data.mef.gov.kh/api/v1/realtime-api/exchange-rate?currency_id=';
+const API_URL = "https://daborey.github.io/khmercurrencyexchange/backend/data.json";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const bankSelect = document.getElementById('select-bank');
-  const fromCurrencySelect = document.getElementById('from-currency');
-  const toCurrencySelect = document.getElementById('to-currency');
-  const amountInput = document.getElementById('amount');
-  const convertButton = document.getElementById('convert-button');
-  const rateDisplay = document.getElementById('rate');
-  const amountResultDisplay = document.getElementById('amount-result');
+// Fetch exchange rates from the API
+async function fetchRates() {
+  try {
+    const response = await fetch(API_URL);
+    const data = await response.json();
 
-  let currentRate = null;
-
-  // Fetch exchange rate when dropdowns are changed
-  async function fetchExchangeRate() {
-    const fromCurrency = fromCurrencySelect.value;
-    const toCurrency = toCurrencySelect.value;
-
-    if (fromCurrency === toCurrency) {
-      currentRate = 1;
-      rateDisplay.textContent = "1 (Same Currency)";
-      return;
+    // Validate data structure
+    if (!data.banks || !Array.isArray(data.banks)) {
+      throw new Error("Invalid data structure: 'banks' is undefined or not an array");
     }
 
-    try {
-      const response = await fetch(`${apiURL}${fromCurrency}`);
-      const data = await response.json();
-
-      if (data && data.data) {
-        const bidRate = data.data.data.bid;
-        const askRate = data.data.data.ask;
-
-        // Display the correct rate based on the bank (use ask rate for simplicity)
-        currentRate = askRate;
-        rateDisplay.textContent = `${bidRate} - ${askRate}`;
-      } else {
-        throw new Error('No rate data available');
-      }
-    } catch (error) {
-      console.error('Error fetching exchange rate:', error);
-      rateDisplay.textContent = 'Error fetching rate';
-      currentRate = null;
-    }
+    displayRates(data.banks);
+  } catch (error) {
+    console.error("Error fetching exchange rates:", error);
+    document.getElementById("debug").textContent = `Error fetching exchange rates: ${error.message}`;
   }
+}
 
-  // Convert currency
-  function convertCurrency() {
-    const amount = parseFloat(amountInput.value);
+// Display the rates in the table
+function displayRates(banks) {
+  const tableBody = document.getElementById("rates-table-body");
+  tableBody.innerHTML = ""; // Clear any existing rows
 
-    if (isNaN(amount) || !currentRate) {
-      amountResultDisplay.textContent = '--';
-      alert('Please enter a valid amount and ensure rates are loaded.');
-      return;
-    }
+  banks.forEach((bank) => {
+    const usdRate = bank.rates.find((rate) => rate.currency === "USD");
+    const cnyRate = bank.rates.find((rate) => rate.currency === "CNY");
+    const khrRate = bank.rates.find((rate) => rate.currency === "KHR");
 
-    const convertedAmount = (amount * currentRate).toFixed(2);
-    amountResultDisplay.textContent = `${convertedAmount} ${toCurrencySelect.value}`;
-  }
+    const bankRow = document.createElement("tr");
+    bankRow.innerHTML = `
+      <td><img src="${bank.logo}" alt="${bank.name}" width="24" height="24"> ${bank.name}</td>
+      <td>Buy: ${usdRate?.bankBuy || "N/A"} | Sell: ${usdRate?.bankSell || "N/A"}</td>
+      <td>Buy: ${cnyRate?.bankBuy || "N/A"} | Sell: ${cnyRate?.bankSell || "N/A"}</td>
+      <td>Buy: ${khrRate?.bankBuy || "N/A"} | Sell: ${khrRate?.bankSell || "N/A"}</td>
+    `;
+    tableBody.appendChild(bankRow);
+  });
+}
 
-  // Event listeners
-  fromCurrencySelect.addEventListener('change', fetchExchangeRate);
-  toCurrencySelect.addEventListener('change', fetchExchangeRate);
-  bankSelect.addEventListener('change', fetchExchangeRate);
-  convertButton.addEventListener('click', convertCurrency);
-
-  // Initialize exchange rates
-  fetchExchangeRate();
+// Initialize on page load
+document.addEventListener("DOMContentLoaded", () => {
+  fetchRates();
 });
