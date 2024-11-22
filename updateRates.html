@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Exchange Rates</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f0f0f0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .message {
+      color: green;
+      font-size: 18px;
+      text-align: center;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Update Exchange Rates</h1>
+    <form id="updateForm">
+      <label for="bank">Select Bank:</label>
+      <select id="bank">
+        <option value="ACLEDA">ACLEDA</option>
+        <option value="ABA">ABA</option>
+        <option value="Wing">Wing</option>
+      </select>
+
+      <label for="currencyFrom">Currency From:</label>
+      <select id="currencyFrom">
+        <option value="USD">USD</option>
+        <option value="KHR">KHR</option>
+        <option value="CNY">CNY</option>
+      </select>
+
+      <label for="currencyTo">Currency To:</label>
+      <select id="currencyTo">
+        <option value="USD">USD</option>
+        <option value="KHR">KHR</option>
+        <option value="CNY">CNY</option>
+      </select>
+
+      <label for="bidRate">Bid Rate:</label>
+      <input type="number" id="bidRate" placeholder="Enter bid rate" required>
+
+      <label for="askRate">Ask Rate:</label>
+      <input type="number" id="askRate" placeholder="Enter ask rate" required>
+
+      <button type="submit">Update Rates</button>
+    </form>
+
+    <div class="message" id="message">Exchange rates updated successfully!</div>
+  </div>
+
+  <script>
+    document.getElementById('updateForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const bank = document.getElementById('bank').value;
+      const currencyFrom = document.getElementById('currencyFrom').value;
+      const currencyTo = document.getElementById('currencyTo').value;
+      const bidRate = parseFloat(document.getElementById('bidRate').value);
+      const askRate = parseFloat(document.getElementById('askRate').value);
+
+      if (isNaN(bidRate) || isNaN(askRate)) {
+        alert('Please enter valid rates');
+        return;
+      }
+
+      const data = {
+        bank,
+        currencyFrom,
+        currencyTo,
+        bidRate,
+        askRate
+      };
+
+      // Send POST request to update the data.json file
+      fetch('/updateRates', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('message').style.display = 'block';
+        } else {
+          alert('Failed to update rates');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error updating rates');
+      });
+    });
+  </script>
+</body>
+</html>
