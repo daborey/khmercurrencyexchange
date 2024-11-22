@@ -1,2 +1,1 @@
 [https://daborey.github.io/khmercurrencyexchange](https://daborey.github.io/khmercurrencyexchange/)
-<a href="https://daborey.github.io/khmercurrencyexchange" target="_blank">[Visit my website](https://daborey.github.io/khmercurrencyexchange)</a>
