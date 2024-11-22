@@ -1,1 +1,1 @@
-[link to this github website: https://daborey.github.io/khmercurrencyexchange](https://daborey.github.io/khmercurrencyexchange/)
+[This github website link: https://daborey.github.io/khmercurrencyexchange](https://daborey.github.io/khmercurrencyexchange/)
