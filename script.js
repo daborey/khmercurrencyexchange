@@ -1,59 +1,73 @@
-// Swap currency functionality
-function swapCurrencies() {
-  const fromCurrency = document.getElementById('fromCurrency');
-  const toCurrency = document.getElementById('toCurrency');
-  const temp = fromCurrency.value;
-  fromCurrency.value = toCurrency.value;
-  toCurrency.value = temp;
-}
+const apiURL = 'https://data.mef.gov.kh/api/v1/realtime-api/exchange-rate?currency_id=';
 
-// Conversion functionality
-function convertCurrency(event) {
-  event.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+  const convertFromSelect = document.getElementById('convert-from');
+  const convertToSelect = document.getElementById('convert-to');
+  const convertAmountInput = document.getElementById('convert-amount');
+  const convertedAmount = document.getElementById('converted-amount');
 
-  const amount = parseFloat(document.getElementById('amount').value);
-  const fromCurrency = document.getElementById('fromCurrency').value;
-  const toCurrency = document.getElementById('toCurrency').value;
-  const exchangeRate = parseFloat(document.getElementById('exchangeRate').value);
-  let result = 0;
-
-  if (isNaN(amount) || amount <= 0) {
-    document.getElementById('result').textContent = "Please enter a valid amount.";
-    return;
-  }
-  if (isNaN(exchangeRate) || exchangeRate <= 0) {
-    document.getElementById('result').textContent = "Please enter a valid exchange rate.";
-    return;
+  // Update exchange rates and currencies
+  function updateRates() {
+    const currency = convertFromSelect.value;
+    
+    fetchExchangeRate('acleda', currency);
+    fetchExchangeRate('aba', currency);
+    fetchExchangeRate('wing', currency);
   }
 
-  if (fromCurrency === "USD" && toCurrency === "KHR") {
-    result = amount * exchangeRate;
-    document.getElementById('result').textContent = `${amount} USD = ${result.toFixed(2)} KHR`;
-  } else if (fromCurrency === "KHR" && toCurrency === "USD") {
-    result = amount / exchangeRate;
-    document.getElementById('result').textContent = `${amount} KHR = ${result.toFixed(2)} USD`;
-  } else {
-    document.getElementById('result').textContent = "No conversion needed.";
+  // Fetch exchange rate for a selected bank and currency pair
+  function fetchExchangeRate(bank, currency) {
+    fetch(`${apiURL}${currency}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.data) {
+          const bidRate = data.data.data.bid;
+          const askRate = data.data.data.ask;
+
+          // Update the rates in the table for buy/sell (bid/ask)
+          document.getElementById(`${bank}-buy`).textContent = bidRate;
+          document.getElementById(`${bank}-sell`).textContent = askRate;
+        } else {
+          document.getElementById(`${bank}-buy`).textContent = 'No data';
+          document.getElementById(`${bank}-sell`).textContent = 'No data';
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching exchange rate:', err);
+        document.getElementById(`${bank}-buy`).textContent = 'Error';
+        document.getElementById(`${bank}-sell`).textContent = 'Error';
+      });
   }
-}
 
-// Update currency data function
-function updateCurrencyData(event) {
-  event.preventDefault();
+  // Update rates when the currency selection changes
+  convertFromSelect.addEventListener('change', updateRates);
+  convertToSelect.addEventListener('change', updateRates);
 
-  const wingBuy = parseFloat(document.getElementById('wingBuyUpdate').value);
-  const wingSell = parseFloat(document.getElementById('wingSellUpdate').value);
-  const abaBuy = parseFloat(document.getElementById('abaBuyUpdate').value);
-  const abaSell = parseFloat(document.getElementById('abaSellUpdate').value);
+  // Currency conversion logic
+  convertAmountInput.addEventListener('input', function() {
+    const amount = parseFloat(convertAmountInput.value);
+    const fromCurrency = convertFromSelect.value;
+    const toCurrency = convertToSelect.value;
 
-  if (!isNaN(wingBuy)) document.getElementById('wingBuy').textContent = wingBuy.toFixed(2);
-  if (!isNaN(wingSell)) document.getElementById('wingSell').textContent = wingSell.toFixed(2);
-  if (!isNaN(abaBuy)) document.getElementById('abaBuy').textContent = abaBuy.toFixed(2);
-  if (!isNaN(abaSell)) document.getElementById('abaSell').textContent = abaSell.toFixed(2);
+    if (!amount) {
+      convertedAmount.textContent = '';
+      return;
+    }
 
-  // Clear the input fields after updating
-  document.getElementById('wingBuyUpdate').value = '';
-  document.getElementById('wingSellUpdate').value = '';
-  document.getElementById('abaBuyUpdate').value = '';
-  document.getElementById('abaSellUpdate').value = '';
-}
+    fetch(`${apiURL}${fromCurrency}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.data) {
+          const askRate = data.data.data.ask;  // Using the ask rate for conversion
+          const convertedAmountValue = (amount * askRate).toFixed(2);
+          convertedAmount.textContent = `Converted amount: ${convertedAmountValue} ${toCurrency}`;
+        }
+      })
+      .catch(err => {
+        console.error('Error during conversion:', err);
+      });
+  });
+
+  // Initialize the exchange rates on page load
+  updateRates();
+});

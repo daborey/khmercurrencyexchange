@@ -1,110 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Currency Exchange</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
-    <!-- Main Content for Currency Converter -->
-    <div class="main-content">
-      <!-- Currency Converter Form -->
-      <div class="exchange-container">
-        <form class="exchange-form" onsubmit="convertCurrency(event)">
-          <!-- Exchange Rate Input -->
-          <div class="input-group">
-            <label for="exchangeRate">Exchange Rate (USD to KHR):</label>
-            <input type="number" id="exchangeRate" value="4000" placeholder="Enter exchange rate" />
-          </div>
-
-          <!-- Amount Input with Default Value of $1 -->
-          <div class="input-group">
-            <label for="amount">Amount (USD):</label>
-            <input type="number" id="amount" value="1" placeholder="Enter amount in USD" />
-          </div>
-
-          <!-- From and To Currency Dropdowns -->
-          <div class="input-group">
-            <label for="fromCurrency">From:</label>
-            <select id="fromCurrency">
-              <option value="USD">USD - US Dollar</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label for="toCurrency">To:</label>
-            <select id="toCurrency">
-              <option value="KHR">KHR - Cambodian Riel</option>
-            </select>
-          </div>
-
-          <!-- Swap Button -->
-          <div class="swap-button" onclick="swapCurrencies()">⇄</div>
-
-          <!-- Convert Button -->
-          <button type="button" class="convert-button" onclick="convertCurrency(event)">Convert</button>
-
-          <!-- Result Label and Result Display -->
-          <div class="result-label">Converted Amount:</div>
-          <div class="result-box">
-            <div class="result" id="result">-</div>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Sidebar for Bank Exchange Rates and Update Data Form -->
-    <div class="sidebar">
-      <h2>Wing Exchange Rates</h2>
-      <p>Updated as of: 12 Nov 2024</p>
-      <div class="rate-header">
-        <span>Currency Pair</span>
-        <span>Bank Buy</span>
-        <span>Bank Sell</span>
-      </div>
-      <div class="rate-item">
-        <span>USD/KHR</span>
-        <span id="wingBuy">4100</span>
-        <span id="wingSell">4125</span>
-      </div>
+    <h1>Currency Exchange Rates</h1>
+    
+    <!-- Currency Conversion Form -->
+    <div class="converter">
+      <label for="convert-from">Convert from:</label>
+      <select id="convert-from">
+        <option value="USD">USD</option>
+        <option value="KHR">KHR</option>
+        <option value="CNY">CNY</option>
+        <option value="EUR">EUR</option>
+        <option value="KRW">KRW</option>
+      </select>
       
-      <h2>ABA Exchange Rates</h2>
-      <p>Updated as of: 12 Nov 2024</p>
-      <div class="rate-header">
-        <span>Currency Pair</span>
-        <span>Bank Buy</span>
-        <span>Bank Sell</span>
-      </div>
-      <div class="rate-item">
-        <span>USD/KHR</span>
-        <span id="abaBuy">4050.00</span>
-        <span id="abaSell">4070.00</span>
-      </div>
-
-      <!-- Update Currency Data Section -->
-      <h2>Update Currency Data</h2>
-      <form onsubmit="updateCurrencyData(event)">
-        <div class="input-group">
-          <label for="wingBuyUpdate">Wing Buy Rate (USD/KHR):</label>
-          <input type="number" id="wingBuyUpdate" placeholder="Enter new Wing buy rate" />
-        </div>
-        <div class="input-group">
-          <label for="wingSellUpdate">Wing Sell Rate (USD/KHR):</label>
-          <input type="number" id="wingSellUpdate" placeholder="Enter new Wing sell rate" />
-        </div>
-        <div class="input-group">
-          <label for="abaBuyUpdate">ABA Buy Rate (USD/KHR):</label>
-          <input type="number" id="abaBuyUpdate" placeholder="Enter new ABA buy rate" />
-        </div>
-        <div class="input-group">
-          <label for="abaSellUpdate">ABA Sell Rate (USD/KHR):</label>
-          <input type="number" id="abaSellUpdate" placeholder="Enter new ABA sell rate" />
-        </div>
-        <button type="submit" class="update-button">Update Rates</button>
-      </form>
+      <label for="convert-to">Convert to:</label>
+      <select id="convert-to">
+        <option value="USD">USD</option>
+        <option value="KHR">KHR</option>
+        <option value="CNY">CNY</option>
+        <option value="EUR">EUR</option>
+        <option value="KRW">KRW</option>
+      </select>
+      
+      <label for="convert-amount">Amount:</label>
+      <input type="number" id="convert-amount" placeholder="Enter amount">
+      
+      <button id="convert-button">Convert</button>
+      <p id="converted-amount"></p>
     </div>
+    
+    <!-- Banks Exchange Rates Table -->
+    <table class="bank-rates">
+      <thead>
+        <tr>
+          <th>Bank</th>
+          <th>Buy (Bid)</th>
+          <th>Sell (Ask)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Acleda</td>
+          <td id="acleda-buy">Loading...</td>
+          <td id="acleda-sell">Loading...</td>
+        </tr>
+        <tr>
+          <td>ABA</td>
+          <td id="aba-buy">Loading...</td>
+          <td id="aba-sell">Loading...</td>
+        </tr>
+        <tr>
+          <td>Wing</td>
+          <td id="wing-buy">Loading...</td>
+          <td id="wing-sell">Loading...</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <script src="script.js"></script>
