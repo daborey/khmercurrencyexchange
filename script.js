@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const bidRate = data.data.data.bid;
         const askRate = data.data.data.ask;
 
-        // Display the correct rate based on bank (use ask rate for simplicity)
+        // Display the correct rate based on the bank (use ask rate for simplicity)
         currentRate = askRate;
         rateDisplay.textContent = `${bidRate} - ${askRate}`;
       } else {
@@ -58,4 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Event listeners
-  fromCur
+  fromCurrencySelect.addEventListener('change', fetchExchangeRate);
+  toCurrencySelect.addEventListener('change', fetchExchangeRate);
+  bankSelect.addEventListener('change', fetchExchangeRate);
+  convertButton.addEventListener('click', convertCurrency);
+
+  // Initialize exchange rates
+  fetchExchangeRate();
+});
