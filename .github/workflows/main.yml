@@ -1,59 +1,30 @@
-name: Update Currency Exchange Rates
+name: Update Exchange Rates
 
 on:
-  workflow_dispatch:
-    inputs:
-      aba_buy:
-        description: 'ABA Buy Rate'
-        required: true
-        default: '4000'
-      aba_sell:
-        description: 'ABA Sell Rate'
-        required: true
-        default: '4100'
-      ace_buy:
-        description: 'ACELEDA Buy Rate'
-        required: true
-        default: '4100'
-      ace_sell:
-        description: 'ACELEDA Sell Rate'
-        required: true
-        default: '4200'
-      wing_buy:
-        description: 'WING Buy Rate'
-        required: true
-        default: '4200'
-      wing_sell:
-        description: 'WING Sell Rate'
-        required: true
-        default: '4300'
+  repository_dispatch:
+    types: [update-exchange-rates]
 
 jobs:
-  update_rates:
+  update_data:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Git configuration
+      - name: Set up Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "github-actions@github.com"
 
-      - name: Update data.json with new exchange rates
+      - name: Decode Base64 content and update data.json
         run: |
-          echo '{
-            "banks": [
-              {"name": "ABA", "buy": "${{ github.event.inputs.aba_buy }}", "sell": "${{ github.event.inputs.aba_sell }}"},
-              {"name": "ACELEDA", "buy": "${{ github.event.inputs.ace_buy }}", "sell": "${{ github.event.inputs.ace_sell }}"},
-              {"name": "WING", "buy": "${{ github.event.inputs.wing_buy }}", "sell": "${{ github.event.inputs.wing_sell }}"}
-            ]
-          }' > backend/data.json
+          # Decode the Base64 content and save it to backend/data.json
+          echo "${{ github.event.client_payload.base64_content }}" | base64 --decode > backend/data.json
 
-      - name: Commit and push changes
+      - name: Commit changes
         run: |
           git add backend/data.json
-          git commit -m "Update exchange rates"
-          git push
+          git commit -m "${{ github.event.client_payload.message }}"
+          git push origin main
         env:
-          DB_TOKEN: ${{ secrets.DB_TOKEN }}  # Use the GitHub secret token here
+          GITHUB_TOKEN: ${{ secrets.DB_TOKEN }}
