@@ -1,28 +1,42 @@
-name: Update Exchange Rates
+name: Update Currency Rates
 
 on:
-  repository_dispatch:
-    types: [update_exchange_rates]
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  update-json:
+  update-currency-rates:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout the repository
+      uses: actions/checkout@v2
 
-      - name: Update data.json
-        run: |
-          echo "${{ github.event.client_payload.data }}" > backend/data.json
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
 
-      - name: Commit changes
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-          git add backend/data.json
-          git commit -m "Updated exchange rates"
+    - name: Install dependencies
+      run: |
+        npm install
 
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Configure Git user
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "github-actions@github.com"
+
+    - name: Update data.json
+      run: |
+        curl -H "Authorization: token ${{ secrets.DB_TOKEN }}" \
+        -X PUT \
+        -d '{"message": "Update exchange rates","content": "'$(base64 -w 0 ./backend/data.json)'"}' \
+        https://api.github.com/repos/daborey/khmercurrencyexchange/contents/backend/data.json
+
+    - name: Commit and push changes
+      run: |
+        git add ./backend/data.json
+        git commit -m "Update exchange rates"
+        git push origin main
