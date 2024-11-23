@@ -1,23 +1,28 @@
-name: Update Data JSON
+name: Update Exchange Rates
 
 on:
-  push:
-    branches:
-      - main
+  repository_dispatch:
+    types: [update_exchange_rates]
+
 jobs:
   update-json:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Update data.json file
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update data.json
         run: |
-          # Add script here to update data.json (or use any commands)
-          echo '{"USD": "4000", "KHR": "1650"}' > data.json
-      - name: Commit and push updated data.json
+          echo "${{ github.event.client_payload.data }}" > backend/data.json
+
+      - name: Commit changes
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add data.json
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add backend/data.json
           git commit -m "Updated exchange rates"
-          git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
