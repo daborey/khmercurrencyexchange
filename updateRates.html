@@ -3,55 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Exchange Rates</title>
+    <title>Update Currency Rates</title>
 </head>
 <body>
-    <h1>Update Exchange Rates</h1>
+    <h2>Update Exchange Rates</h2>
+
     <form id="updateForm">
-        <label for="usd-buy">USD Buy:</label>
-        <input type="text" id="usd-buy" name="usd-buy" required>
-        <br>
-        <label for="usd-sell">USD Sell:</label>
-        <input type="text" id="usd-sell" name="usd-sell" required>
-        <br>
-        <button type="button" onclick="triggerUpdate()">Update Rates</button>
+        <!-- ABA -->
+        <h3>ABA</h3>
+        <label for="aba_buy">Buy Rate:</label>
+        <input type="number" id="aba_buy" required>
+        <label for="aba_sell">Sell Rate:</label>
+        <input type="number" id="aba_sell" required>
+        
+        <br><br>
+
+        <!-- ACELEDA -->
+        <h3>ACELEDA</h3>
+        <label for="ace_buy">Buy Rate:</label>
+        <input type="number" id="ace_buy" required>
+        <label for="ace_sell">Sell Rate:</label>
+        <input type="number" id="ace_sell" required>
+        
+        <br><br>
+
+        <!-- WING -->
+        <h3>WING</h3>
+        <label for="wing_buy">Buy Rate:</label>
+        <input type="number" id="wing_buy" required>
+        <label for="wing_sell">Sell Rate:</label>
+        <input type="number" id="wing_sell" required>
+
+        <br><br>
+        <button type="button" id="updateButton">Update Rates</button>
     </form>
 
     <script>
-        async function triggerUpdate() {
-            const data = {
-                banks: [
-                    {
-                        name: "Bank1",
-                        buy: document.getElementById("usd-buy").value,
-                        sell: document.getElementById("usd-sell").value
-                    }
-                ]
+        const updateButton = document.getElementById('updateButton');
+
+        updateButton.addEventListener('click', function() {
+            // Get the values from the form fields
+            const abaBuy = document.getElementById('aba_buy').value;
+            const abaSell = document.getElementById('aba_sell').value;
+
+            const aceBuy = document.getElementById('ace_buy').value;
+            const aceSell = document.getElementById('ace_sell').value;
+
+            const wingBuy = document.getElementById('wing_buy').value;
+            const wingSell = document.getElementById('wing_sell').value;
+
+            // Validate all fields
+            if (!abaBuy || !abaSell || !aceBuy || !aceSell || !wingBuy || !wingSell) {
+                alert('Please fill in all the fields.');
+                return;
+            }
+
+            // URL for triggering the GitHub Action workflow
+            const url = 'https://api.github.com/repos/daborey/khmercurrencyexchange/actions/workflows/main.yml/dispatches';
+            const token = 'YOUR_DB_TOKEN'; // Replace with your token using environment variables or secure methods
+
+            const payload = {
+                "ref": "main", // Reference to the main branch
+                "inputs": {
+                    "aba_buy": abaBuy,
+                    "aba_sell": abaSell,
+                    "ace_buy": aceBuy,
+                    "ace_sell": aceSell,
+                    "wing_buy": wingBuy,
+                    "wing_sell": wingSell
+                }
             };
 
-            try {
-                const response = await fetch('https://api.github.com/repos/daborey/khmercurrencyexchange/dispatches', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        event_type: 'update_exchange_rates',
-                        client_payload: { data }
-                    })
-                });
-
-                if (response.ok) {
-                    alert("Exchange rates update triggered successfully!");
-                } else {
-                    alert("Failed to trigger update.");
-                }
-            } catch (error) {
-                console.error("Error:", error);
-                alert("An error occurred. Please try again.");
-            }
-        }
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Exchange rates updated!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error updating exchange rates.');
+            });
+        });
     </script>
 </body>
 </html>
